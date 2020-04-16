@@ -1,15 +1,25 @@
-
 public class VMM {
 	static int pagereplace;
+	static boolean flag ;
+
+ 	@SuppressWarnings("unused")
 	static void memStore (String variableId,int value) {
+			int freePage=0;
  			for(int i = 0;i<Mainmemory.mainMemory.length;i++) {
-				// mainMemory[i].timeStamp;
-				if(Mainmemory.mainMemory[i]==null ) {
+				
+ 				 for (int j = 0;j<Mainmemory.mainMemory.length;j++) {
+ 					 if (Mainmemory.mainMemory[j]==null) {
+ 						 flag = true;
+ 						 freePage = j;
+ 					 }
+ 				 }
+				if(flag==true ) {
 					Page page= new Page()  ;
 				    page.variableId =variableId;
 					page.value=value;
-					Mainmemory.mainMemory[i]=page;
-					new CPU (Mainmemory.mainMemory[i],"Store");
+					Mainmemory.mainMemory[freePage]=page;
+						System.out.println("Clock: "+ClassMain.clock+": Process "+Thread.currentThread().getName()+": Store: Variable  "+variableId+", "+"Value: "+value);
+						flag = false;
 					break;
  					}else {
  						Page page= new Page();
@@ -17,7 +27,9 @@ public class VMM {
  					 	page.variableId =variableId;
  						page.value=value;
  						Mainmemory.mainMemory[i]=page;
- 						new CPU (Mainmemory.mainMemory[i],"Store");
+ 						System.out.println("Clock: "+ClassMain.clock+": Process "+Thread.currentThread().getName()+": Store: Variable  "+variableId+", "+"Value: "+value);
+ 					 	System.out.println("Memory Manager, SWAP: Variable "+variableId+" with"+" Variable "+"1");
+
  						break;
  						
  					}
@@ -30,7 +42,7 @@ public class VMM {
 		for(int i = 0;i<Mainmemory.mainMemory.length;i++) {
 			try {
 			if(Mainmemory.mainMemory[i].variableId.equals(variableId)) {
-				new CPU(Mainmemory.mainMemory[i],"Release");
+				System.out.println("Clock: "+ClassMain.clock+": Process "+Thread.currentThread().getName()+": Release: Variable  "+variableId);
 				Mainmemory.mainMemory[i]=null;
 			}}catch(Exception e) {
 				//System.out.println("MISS");
@@ -46,7 +58,7 @@ public class VMM {
 		try {
 			for(int i = 0;i<Mainmemory.mainMemory.length;i++) {
 				if(Mainmemory.mainMemory[i].variableId.equals(variableId)) {
-				new CPU (Mainmemory.mainMemory[i],"Lookup");
+					System.out.println("Clock: "+ClassMain.clock+": Process "+Thread.currentThread().getName()+": Lookup: Variable  "+variableId+", "+"Value: ");
 			}
 			}	
 			}catch(Exception e) {
@@ -61,6 +73,3 @@ public class VMM {
 	
 	
 	
-	
-
-
